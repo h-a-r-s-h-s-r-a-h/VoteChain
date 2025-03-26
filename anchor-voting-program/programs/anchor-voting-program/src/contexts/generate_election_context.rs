@@ -1,5 +1,5 @@
 use crate::{constants::*, state::*};
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, solana_program::address_lookup_table::instruction};
 
 #[derive(Accounts)]
 #[instruction(election_id:String)]
@@ -18,7 +18,7 @@ pub struct CreateElection<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction( candidate_key:String,election_id:String)]
+#[instruction(candidate_key:String, election_id:String)]
 pub struct AddCandidate<'info> {
     #[account(
         init,
@@ -32,8 +32,6 @@ pub struct AddCandidate<'info> {
     pub election_generator: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
-
-
 
 impl Space for CandidateAccountState {
     const INIT_SPACE: usize = ANCHOR_DISCRIMINATOR
