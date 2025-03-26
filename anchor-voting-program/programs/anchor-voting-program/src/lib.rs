@@ -4,8 +4,12 @@ mod constants;
 mod contexts;
 mod errors;
 mod state;
+mod instructions;
+
 
 use contexts::*;
+use instructions::*;
+
 
 declare_id!("7QFYjVpv8vsSyxuiuLcTPpErcNkVZ1Liag8F9K5tqhVD");
 
