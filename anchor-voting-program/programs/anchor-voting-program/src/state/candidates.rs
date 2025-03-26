@@ -4,5 +4,7 @@ use anchor_lang::prelude::*;
 pub struct CandiadteAccountState {
     pub election_id: String,
     pub candidate_key: Pubkey,
-    pub vote_counts: u8,
+    pub candidate_name: String,
+    pub candidate_slogan: String,
+    pub vote_counts: u32,
 }

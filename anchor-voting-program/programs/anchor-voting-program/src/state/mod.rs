@@ -1,7 +1,7 @@
-pub mod candidate;
+pub mod candidates;
 pub mod election_account;
 pub mod voter;
 
-pub use candidate::*;
+pub use candidates::*;
 pub use election_account::*;
 pub use voter::*;

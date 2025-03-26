@@ -5,7 +5,6 @@ pub struct VotingAccountState {
     pub election_generator: Pubkey,
     pub election_id: String,
     pub election_title: String,
-    pub candidates: Vec<Pubkey>,
-    pub voters: Vec<Pubkey>,
+    pub election_description: String,
     pub is_active: bool,
 }
