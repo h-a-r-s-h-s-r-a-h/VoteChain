@@ -1,7 +1,21 @@
 use crate::{constants::*, errors::*, state::*};
 use anchor_lang::prelude::*;
 
-
+#[derive(Accounts)]
+#[instruction(election_id:String)]
+pub struct CreateElection<'info> {
+    #[account(
+        init,
+        seeds=["election".as_bytes(),election_id.as_bytes()],
+        bump,
+        payer=election_generator,
+        space=ElectionAccountState::INIT_SPACE+MAX_ELECTIONID_LENGTH+MAX_TITLE_LENGTH+MAX_DESCRIPTION_LENGTH
+    )]
+    pub election: Account<'info, ElectionAccountState>,
+    #[account(mut)]
+    pub election_generator: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
 
 
 
@@ -14,7 +28,7 @@ impl Space for CandiadteAccountState {
         + U32_SIZE;
 }
 
-impl Space for VotingAccountState {
+impl Space for ElectionAccountState {
     const INIT_SPACE: usize = ANCHOR_DISCRIMINATOR
         + PUBKEY_SIZE
         + STRING_LENGTH_PREFIX

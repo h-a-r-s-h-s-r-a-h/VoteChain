@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[account]
-pub struct VotingAccountState {
+pub struct ElectionAccountState {
     pub election_generator: Pubkey,
     pub election_id: String,
     pub election_title: String,
