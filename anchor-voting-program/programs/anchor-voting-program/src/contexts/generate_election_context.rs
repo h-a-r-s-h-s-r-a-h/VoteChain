@@ -9,7 +9,7 @@ pub struct CreateElection<'info> {
         seeds=["election".as_bytes(),election_id.as_bytes()],
         bump,
         payer=election_generator,
-        space=ElectionAccountState::INIT_SPACE+MAX_ELECTIONID_LENGTH+MAX_TITLE_LENGTH+MAX_DESCRIPTION_LENGTH
+        space=ElectionAccountState::INIT_SPACE + MAX_ELECTIONID_LENGTH + MAX_TITLE_LENGTH + MAX_DESCRIPTION_LENGTH
     )]
     pub election: Account<'info, ElectionAccountState>,
     #[account(mut)]
@@ -22,14 +22,46 @@ pub struct CreateElection<'info> {
 pub struct AddCandidate<'info> {
     #[account(
         init,
-        seeds=["candidate".as_bytes(),candidate_key.as_bytes(),election_id.as_bytes()],
+        seeds=["candidate".as_bytes(), candidate_key.as_bytes(), election_id.as_bytes()],
         bump,
         payer=election_generator,
-        space=CandidateAccountState::INIT_SPACE+MAX_ELECTIONID_LENGTH+MAX_CANDIDATEKEY_LENGTH+MAX_CANDIDATE_NAME_LENGTH+MAX_CANDIDATE_SLOGAN_LENGTH
+        space=CandidateAccountState::INIT_SPACE + MAX_ELECTIONID_LENGTH + MAX_CANDIDATEKEY_LENGTH + MAX_CANDIDATE_NAME_LENGTH + MAX_CANDIDATE_SLOGAN_LENGTH
     )]
     pub candidate: Account<'info, CandidateAccountState>,
+
+    #[account(
+        mut,
+        seeds = ["election".as_bytes(), election_id.as_bytes()],
+        bump,
+        has_one = election_generator
+    )]
+    pub election: Account<'info, ElectionAccountState>,
+
     #[account(mut)]
     pub election_generator: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(election_id:String, candidate_key:String)]
+pub struct Vote<'info> {
+    #[account(
+        mut,
+        seeds=["candidate".as_bytes(), candidate_key.as_bytes(), election_id.as_bytes()],
+        bump
+    )]
+    pub candidate: Account<'info, CandidateAccountState>,
+
+    #[account(
+        init,
+        seeds=["vote".as_bytes(), election_id.as_bytes(), voter_signer.key().as_ref()],
+        bump,
+        payer=voter_signer,
+        space=VoteAccount::INIT_SPACE + MAX_ELECTIONID_LENGTH + MAX_CANDIDATEKEY_LENGTH,
+    )]
+    pub voter: Account<'info, VoteAccount>,
+    #[account(mut)]
+    pub voter_signer: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
