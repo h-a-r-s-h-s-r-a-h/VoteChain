@@ -9,3 +9,19 @@ pub enum ElectionAccountError {
     #[msg("Election Description too long!")]
     ElectionDescriptionTooLong,
 }
+
+#[error_code]
+pub enum CandidateAccountError {
+    #[msg("Election ID too long!")]
+    ElectionIdTooLong,
+    #[msg("Election Name too long!")]
+    CandidateNameTooLong,
+    #[msg("Election Slogan too long!")]
+    CandidateSloganTooLong,
+}
+
+#[error_code]
+pub enum VoterAccountError {
+    #[msg("Election ID too long!")]
+    ElectionIdTooLong,
+}

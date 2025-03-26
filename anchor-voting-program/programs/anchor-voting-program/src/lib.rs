@@ -1,8 +1,11 @@
 use anchor_lang::prelude::*;
 
 mod constants;
+mod contexts;
 mod errors;
 mod state;
+
+use contexts::*;
 
 declare_id!("7QFYjVpv8vsSyxuiuLcTPpErcNkVZ1Liag8F9K5tqhVD");
 
