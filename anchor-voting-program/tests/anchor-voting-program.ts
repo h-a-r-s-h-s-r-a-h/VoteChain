@@ -4,7 +4,6 @@ import { AnchorVotingProgram } from "../target/types/anchor_voting_program";
 import { expect } from "chai";
 
 describe("anchor-voting-program", () => {
-  // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -16,7 +15,6 @@ describe("anchor-voting-program", () => {
     description: "PM election",
     election_id: "12345",
   };
-  //["election".as_bytes(),election_id.as_bytes()],
 
   const [electionPda] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("election"), Buffer.from(election.election_id)],
