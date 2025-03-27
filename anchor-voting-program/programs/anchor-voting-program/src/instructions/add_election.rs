@@ -23,6 +23,8 @@ pub fn create_election(
     );
 
     let election = &mut ctx.accounts.election;
+
+    
     election.election_generator = ctx.accounts.election_generator.key();
     election.election_id = election_id.trim().to_string();
     election.election_title = election_title.trim().to_string();

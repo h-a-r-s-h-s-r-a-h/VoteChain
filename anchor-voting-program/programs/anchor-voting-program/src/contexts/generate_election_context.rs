@@ -44,7 +44,7 @@ pub struct AddCandidate<'info> {
 
 #[derive(Accounts)]
 #[instruction(election_id:String, candidate_key:String)]
-pub struct Vote<'info> {
+pub struct AddVote<'info> {
     #[account(
         mut,
         seeds=["candidate".as_bytes(), candidate_key.as_bytes(), election_id.as_bytes()],
