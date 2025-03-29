@@ -22,12 +22,20 @@ describe("anchor-voting-program", () => {
   };
 
   const [anotherElectionPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("election"), Buffer.from(anotherElection.election_id)],
+    [
+      Buffer.from("election"),
+      Buffer.from(anotherElection.election_id),
+      provider.wallet.publicKey.toBuffer(),
+    ],
     program.programId
   );
 
   const [electionPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("election"), Buffer.from(election.election_id)],
+    [
+      Buffer.from("election"),
+      Buffer.from(election.election_id),
+      provider.wallet.publicKey.toBuffer(),
+    ],
     program.programId
   );
 

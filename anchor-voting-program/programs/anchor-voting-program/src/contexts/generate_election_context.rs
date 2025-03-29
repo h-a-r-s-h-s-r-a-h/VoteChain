@@ -6,7 +6,7 @@ use anchor_lang::{prelude::*, solana_program::address_lookup_table::instruction}
 pub struct CreateElection<'info> {
     #[account(
         init,
-        seeds=["election".as_bytes(),election_id.as_bytes()],
+        seeds=["election".as_bytes(),election_id.as_bytes(),election_generator.key().as_ref()],
         bump,
         payer=election_generator,
         space=ElectionAccountState::INIT_SPACE + MAX_ELECTIONID_LENGTH + MAX_TITLE_LENGTH + MAX_DESCRIPTION_LENGTH
@@ -16,6 +16,8 @@ pub struct CreateElection<'info> {
     pub election_generator: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
+
+
 
 #[derive(Accounts)]
 #[instruction(candidate_key:String, election_id:String)]
@@ -31,7 +33,7 @@ pub struct AddCandidate<'info> {
 
     #[account(
         mut,
-        seeds = ["election".as_bytes(), election_id.as_bytes()],
+        seeds = ["election".as_bytes(), election_id.as_bytes(),election_generator.key().as_ref()],
         bump,
         has_one = election_generator
     )]
