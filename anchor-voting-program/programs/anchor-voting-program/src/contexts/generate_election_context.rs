@@ -1,5 +1,5 @@
 use crate::{constants::*, state::*};
-use anchor_lang::{prelude::*, solana_program::address_lookup_table::instruction};
+use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 #[instruction(election_id:String)]
@@ -16,8 +16,6 @@ pub struct CreateElection<'info> {
     pub election_generator: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
-
-
 
 #[derive(Accounts)]
 #[instruction(candidate_key:String, election_id:String)]
