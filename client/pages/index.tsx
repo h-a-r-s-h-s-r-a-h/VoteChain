@@ -14,9 +14,9 @@ const Home: NextPage = () => {
             <p className="text-lg font-semibold mb-4">
               Welcome, Start Voting!
             </p>
-            <Link href="/rateMovie" passHref>
+            <Link href="/getStarted" passHref>
               <button className="ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                Rate Now
+                Start
               </button>
             </Link>
           </>
