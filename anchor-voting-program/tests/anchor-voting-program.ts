@@ -3,7 +3,7 @@ import { Program } from "@coral-xyz/anchor";
 import { AnchorVotingProgram } from "../target/types/anchor_voting_program";
 import { expect } from "chai";
 
-describe("anchor-voting-program", () => {
+describe("anchor-voting-program", async () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -32,6 +32,15 @@ describe("anchor-voting-program", () => {
     candidate_name: "Tejashwi yadav",
     candidate_slogan: "Mein Bihar ko lutunga",
   };
+
+  const [vote1Pda] = anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("vote"),
+      Buffer.from(election.election_id),
+      provider.wallet.publicKey.toBuffer(),
+    ],
+    program.programId
+  );
 
   const [candidate1Pda] = anchor.web3.PublicKey.findProgramAddressSync(
     [
@@ -165,8 +174,45 @@ describe("anchor-voting-program", () => {
       expect(account.candidateName).to.equal(candidate2.candidate_name);
       expect(account.candidateSlogan).to.equal(candidate2.candidate_slogan);
       expect(account.electionId).to.equal(election.election_id);
+      expect(account.voteCounts).to.equal(0);
     } catch (error) {
       console.error("Error adding candidate:", error);
+      throw error;
+    }
+  });
+
+  it("adds a vote", async () => {
+    try {
+      await program.methods
+        .addVote(election.election_id, candidate1.candidate_key)
+        .accounts({})
+        .rpc();
+
+      const account = await program.account.voteAccount.fetch(vote1Pda);
+      const countVoteAccount =
+        await program.account.candidateAccountState.fetch(candidate1Pda);
+      expect(account.candidateKey).to.equal(candidate1.candidate_key);
+      expect(account.electionId).to.equal(election.election_id);
+      expect(countVoteAccount.voteCounts).to.equal(1);
+    } catch (error) {
+      console.error("Error adding candidate:", error);
+      throw error;
+    }
+  });
+
+  it("close election", async () => {
+    try {
+      await program.methods
+        .closeElection(election.election_id)
+        .accounts({})
+        .rpc();
+
+      const account = await program.account.electionAccountState.fetchNullable(
+        electionPda
+      );
+      expect(account).to.be.null;
+    } catch (error) {
+      console.error("Error adding election:", error);
       throw error;
     }
   });

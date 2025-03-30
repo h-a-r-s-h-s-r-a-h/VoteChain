@@ -22,14 +22,16 @@ pub struct CreateElection<'info> {
 pub struct CloseElection<'info> {
     #[account(
         mut,
-        seeds=["election".as_bytes(),election_id.as_bytes(),election_generator.key().as_ref()],
+        seeds=["election".as_bytes(), election_id.as_bytes(), election_generator.key().as_ref()],
         bump,
+        close = election_generator
     )]
     pub election: Account<'info, ElectionAccountState>,
     #[account(mut)]
     pub election_generator: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
+
 
 #[derive(Accounts)]
 #[instruction(candidate_key:String, election_id:String)]
