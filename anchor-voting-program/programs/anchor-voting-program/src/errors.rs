@@ -31,3 +31,9 @@ pub enum VoterAccountError {
     #[msg("Candidate Not found!")]
     CandidateNotFound,
 }
+
+#[error_code]
+pub enum CloseElectionError {
+    #[msg("Election already closed!")]
+    ElectionClosedEarlier,
+}
