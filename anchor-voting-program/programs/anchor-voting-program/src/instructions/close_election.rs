@@ -1,7 +1,7 @@
-use crate::{constants::*, contexts::*, errors::*, state::election_account};
+use crate::{contexts::*, errors::*};
 use anchor_lang::prelude::*;
 
-pub fn close_election(ctx: Context<CloseElection>, election_id: String) -> Result<()> {
+pub fn close_election(ctx: Context<CloseElection>, _election_id: String) -> Result<()> {
     let election = &mut ctx.accounts.election;
     require!(
         election.is_active == true,

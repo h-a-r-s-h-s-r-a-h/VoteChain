@@ -47,5 +47,8 @@ pub mod anchor_voting_program {
     ) -> Result<()> {
         instructions::add_vote(ctx, election_id, candidate_key)
     }
-}
 
+    pub fn close_election(ctx: Context<CloseElection>, election_id: String) -> Result<()> {
+        instructions::close_election(ctx, election_id)
+    }
+}
