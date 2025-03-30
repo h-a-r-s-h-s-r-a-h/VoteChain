@@ -18,6 +18,20 @@ pub struct CreateElection<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(election_id:String)]
+pub struct CloseElection<'info> {
+    #[account(
+        mut,
+        seeds=["election".as_bytes(),election_id.as_bytes(),election_generator.key().as_ref()],
+        bump,
+    )]
+    pub election: Account<'info, ElectionAccountState>,
+    #[account(mut)]
+    pub election_generator: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
 #[instruction(candidate_key:String, election_id:String)]
 pub struct AddCandidate<'info> {
     #[account(
