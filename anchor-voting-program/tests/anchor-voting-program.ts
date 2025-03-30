@@ -27,10 +27,25 @@ describe("anchor-voting-program", () => {
     candidate_slogan: "Mein tho Bihar ko lutunga",
   };
 
-  const [candidatePda] = anchor.web3.PublicKey.findProgramAddressSync(
+  const candidate2 = {
+    candidate_key: "101",
+    candidate_name: "Tejashwi yadav",
+    candidate_slogan: "Mein Bihar ko lutunga",
+  };
+
+  const [candidate1Pda] = anchor.web3.PublicKey.findProgramAddressSync(
     [
       Buffer.from("candidate"),
       Buffer.from(candidate1.candidate_key),
+      Buffer.from(election.election_id),
+    ],
+    program.programId
+  );
+
+  const [candidate2Pda] = anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("candidate"),
+      Buffer.from(candidate2.candidate_key),
       Buffer.from(election.election_id),
     ],
     program.programId
@@ -106,7 +121,7 @@ describe("anchor-voting-program", () => {
     }
   });
 
-  it("adds candidate", async () => {
+  it("adds a candidate", async () => {
     try {
       await program.methods
         .addCandidate(
@@ -119,11 +134,36 @@ describe("anchor-voting-program", () => {
         .rpc();
 
       const account = await program.account.candidateAccountState.fetch(
-        candidatePda
+        candidate1Pda
       );
       expect(account.candidateKey).to.equal(candidate1.candidate_key);
       expect(account.candidateName).to.equal(candidate1.candidate_name);
       expect(account.candidateSlogan).to.equal(candidate1.candidate_slogan);
+      expect(account.electionId).to.equal(election.election_id);
+    } catch (error) {
+      console.error("Error adding candidate:", error);
+      throw error;
+    }
+  });
+
+  it("adds another candidate", async () => {
+    try {
+      await program.methods
+        .addCandidate(
+          candidate2.candidate_key,
+          election.election_id,
+          candidate2.candidate_name,
+          candidate2.candidate_slogan
+        )
+        .accounts({})
+        .rpc();
+
+      const account = await program.account.candidateAccountState.fetch(
+        candidate2Pda
+      );
+      expect(account.candidateKey).to.equal(candidate2.candidate_key);
+      expect(account.candidateName).to.equal(candidate2.candidate_name);
+      expect(account.candidateSlogan).to.equal(candidate2.candidate_slogan);
       expect(account.electionId).to.equal(election.election_id);
     } catch (error) {
       console.error("Error adding candidate:", error);
