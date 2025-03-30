@@ -20,6 +20,8 @@ interface SolanaContextType {
   candidateKey: string;
   setCandidateKey: React.Dispatch<React.SetStateAction<string>>;
   candidateName: string;
+  setCandidateName: React.Dispatch<React.SetStateAction<string>>;
+  candidateSlogan: string;
   setCandidateSlogan: React.Dispatch<React.SetStateAction<string>>;
   transactionUrl: string;
   setTransactionUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -40,16 +42,20 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({
     useState<anchor.web3.PublicKey | null>(null);
   const { publicKey } = useWallet();
 
-  const [program, setProgram] =
-    useState<anchor.Program<AnchorVotingProgram>>();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [rating, setRating] = useState(0);
+  const [program, setProgram] = useState<anchor.Program<AnchorVotingProgram>>();
+  const [electionId, setElectionId] = useState("");
+  const [electionTitle, setElectionTitle] = useState("");
+  const [electionDescription, setElectionDescription] = useState("");
+  const [candidateKey, setCandidateKey] = useState("");
+  const [candidateName, setCandidateName] = useState("");
+  const [candidateSlogan, setCandidateSlogan] = useState("");
   const [transactionUrl, setTransactionUrl] = useState("");
-  const [moviePda, setMoviePda] = useState<anchor.web3.PublicKey | null>(null);
-  const [mint, setMint] = useState<anchor.web3.PublicKey | null>(null);
-  const [tokenAccount, setTokenAccount] =
+  const [electionPda, setElectionPda] = useState<anchor.web3.PublicKey | null>(
+    null
+  );
+  const [candidatePda, setCandidatePda] =
     useState<anchor.web3.PublicKey | null>(null);
+  const [votePda, setVotePda] = useState<anchor.web3.PublicKey | null>(null);
 
   useEffect(() => {
     if (!wallet) return;
@@ -69,29 +75,38 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setProgram(programInstance);
 
-    const [pda] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from(title), wallet.publicKey.toBuffer()],
+    const [pdaForElection] = anchor.web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("election"),
+        Buffer.from(electionId),
+        wallet.publicKey.toBuffer(),
+      ],
       programInstance.programId
     );
-    setMoviePda(pda);
+    setElectionPda(pdaForElection);
 
-    const [mintAddress] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("mint")],
+    const [pdaForCandidate] = anchor.web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("candidate"),
+        Buffer.from(candidateKey),
+        Buffer.from(electionId),
+      ],
       programInstance.programId
     );
-    setMint(mintAddress);
-  }, [connection, wallet, title]);
+    setCandidatePda(pdaForCandidate);
 
-  useEffect(() => {
-    if (!wallet || !mint) return;
-    (async () => {
-      const associatedTokenAddress = await getAssociatedTokenAddress(
-        mint,
-        wallet.publicKey
-      );
-      setTokenAccount(associatedTokenAddress);
-    })();
-  }, [mint, wallet]);
+    const [pdaForVote] = anchor.web3.PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("vote"),
+        Buffer.from(electionId),
+        wallet.publicKey.toBuffer(),
+      ],
+      programInstance.programId
+    );
+    setVotePda(pdaForVote);
+  }, [connection, wallet, electionId, candidateKey]);
+
+  
 
   const contextValue = React.useMemo(
     () => ({
