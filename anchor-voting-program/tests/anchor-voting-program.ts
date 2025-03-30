@@ -21,6 +21,21 @@ describe("anchor-voting-program", () => {
     election_id: "123456",
   };
 
+  const candidate1 = {
+    candidate_key: "100",
+    candidate_name: "Nitish Kumar",
+    candidate_slogan: "Mein tho Bihar ko lutunga",
+  };
+
+  const [candidatePda] = anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("candidate"),
+      Buffer.from(candidate1.candidate_key),
+      Buffer.from(election.election_id),
+    ],
+    program.programId
+  );
+
   const [anotherElectionPda] = anchor.web3.PublicKey.findProgramAddressSync(
     [
       Buffer.from("election"),
@@ -60,7 +75,7 @@ describe("anchor-voting-program", () => {
         provider.wallet.publicKey.toString()
       );
     } catch (error) {
-      console.error("Error adding movie review:", error);
+      console.error("Error adding election:", error);
       throw error;
     }
   });
@@ -86,7 +101,32 @@ describe("anchor-voting-program", () => {
         provider.wallet.publicKey.toString()
       );
     } catch (error) {
-      console.error("Error adding movie review:", error);
+      console.error("Error adding election:", error);
+      throw error;
+    }
+  });
+
+  it("adds candidate", async () => {
+    try {
+      await program.methods
+        .addCandidate(
+          candidate1.candidate_key,
+          election.election_id,
+          candidate1.candidate_name,
+          candidate1.candidate_slogan
+        )
+        .accounts({})
+        .rpc();
+
+      const account = await program.account.candidateAccountState.fetch(
+        candidatePda
+      );
+      expect(account.candidateKey).to.equal(candidate1.candidate_key);
+      expect(account.candidateName).to.equal(candidate1.candidate_name);
+      expect(account.candidateSlogan).to.equal(candidate1.candidate_slogan);
+      expect(account.electionId).to.equal(election.election_id);
+    } catch (error) {
+      console.error("Error adding candidate:", error);
       throw error;
     }
   });
