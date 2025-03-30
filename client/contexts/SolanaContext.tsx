@@ -5,7 +5,6 @@ import {
   useWallet,
 } from "@solana/wallet-adapter-react";
 import * as anchor from "@coral-xyz/anchor";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
 import idl from "../idl.json";
 import { AnchorVotingProgram } from "../types/anchor_voting_program";
 
@@ -106,37 +105,47 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({
     setVotePda(pdaForVote);
   }, [connection, wallet, electionId, candidateKey]);
 
-  
-
   const contextValue = React.useMemo(
     () => ({
       program,
-      title,
-      setTitle,
-      description,
-      setDescription,
-      rating,
-      setRating,
+      electionId,
+      setElectionId,
+      electionTitle,
+      setElectionTitle,
+      electionDescription,
+      setElectionDescription,
       transactionUrl,
       setTransactionUrl,
-      moviePda,
-      mint,
-      tokenAccount,
+      candidateKey,
+      setCandidateKey,
+      candidateName,
+      setCandidateName,
+      candidateSlogan,
+      setCandidateSlogan,
+      electionPda,
+      candidatePda,
+      votePda,
       contextPublicKey,
     }),
     [
       program,
-      title,
-      setTitle,
-      description,
-      setDescription,
-      rating,
-      setRating,
+      electionId,
+      setElectionId,
+      electionTitle,
+      setElectionTitle,
+      electionDescription,
+      setElectionDescription,
       transactionUrl,
       setTransactionUrl,
-      moviePda,
-      mint,
-      tokenAccount,
+      candidateKey,
+      setCandidateKey,
+      candidateName,
+      setCandidateName,
+      candidateSlogan,
+      setCandidateSlogan,
+      electionPda,
+      candidatePda,
+      votePda,
       contextPublicKey,
     ]
   );
