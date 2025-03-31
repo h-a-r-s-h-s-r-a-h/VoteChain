@@ -70,7 +70,7 @@ yarn (recommended) or npm
 ### Installation Steps
 ```bash
 # Step 1: Clone the repository
-git clone <repository-url>
+git clone https://github.com/h-a-r-s-h-s-r-a-h/VoteChain.git
 cd votingSystem
 
 # Step 2: Install backend dependencies
@@ -213,7 +213,7 @@ We’re excited for contributions! Here’s how you can get started:
 ### Steps to Contribute
 1. **Fork the Repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/h-a-r-s-h-s-r-a-h/VoteChain.git
    ```
 
 2. **Create a Feature Branch**:
