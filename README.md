@@ -1,4 +1,3 @@
-Here's an enhanced, detailed, and interactive rewrite of your README file with **Next.js** integrated instead of React.js:
 
 ---
 
